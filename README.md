@@ -14,14 +14,19 @@
 The repository consists of the source codes of "Retrieval-Augmented Generation-based Relation Extraction" journal paper which has been submitted to Semantic Web Journal (SWJ).
 
 
-### To cite its preprint:
+### To cite it:
 ```
-@misc{efeoglu2024retrievalaugmented,
-      title={Retrieval-Augmented Generation-based Relation Extraction}, 
-      author={Sefika Efeoglu and Adrian Paschke},
-      year={2024},
-      eprint={2404.13397},
-      archivePrefix={arXiv}
+@article{doi:10.1177/22104968251385519,
+         author = {Sefika Efeoglu and Adrian Paschke},
+         title ={Retrieval-Augmented Generation-Based Relation Extraction},
+         journal = {Semantic Web},
+         volume = {16},
+         number = {5},
+         pages = {22104968251385519},
+         year = {2025},
+         doi = {10.1177/22104968251385519},
+         URL = {https://doi.org/10.1177/22104968251385519},
+         eprint = {https://doi.org/10.1177/22104968251385519},
 }
 ```
 
