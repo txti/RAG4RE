@@ -33,7 +33,7 @@ The project provides an end-to-end pipeline for relation extraction with and wit
 - TACRED is licensed by LDC and must be obtained from [LDC2018T24](https://catalog.ldc.upenn.edu/LDC2018T24).
 - TACREV is constructed from TACRED using [DFKI-NLP/tacrev](https://github.com/DFKI-NLP/tacrev).
 - Re-TACRED is derived from TACRED using [gstoica27/Re-TACRED](https://github.com/gstoica27/Re-TACRED).
-- SemEval 2010 Task 8 is available on [Hugging Face](https://huggingface.co/datasets/sem_eval_2010_task_8).
+- SemEval 2010 Task 8 is available on [Hugging Face](https://huggingface.co/datasets/joelniklaus/sem_eval_2010_task_8).
 
 Because TACRED is restricted, prompts/raw outputs that expose original text are not directly redistributed.
 
