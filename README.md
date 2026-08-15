@@ -4,7 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Transformers](https://img.shields.io/badge/Transformers-4.38.2-yellow)](https://github.com/huggingface/transformers)
 [![Sentence-Transformers](https://img.shields.io/badge/Sentence--Transformers-2.2.2-orange)](https://www.sbert.net/)
-[![GitHub stars](https://img.shields.io/github/stars/sefeoglu/RAG4RE?style=social)](https://github.com/sefeoglu/RAG4RE/stargazers)
 [![GitHub last commit](https://img.shields.io/github/last-commit/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/commits/main)
 [![GitHub issues](https://img.shields.io/github/issues/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/issues)
 [![GitHub repo size](https://img.shields.io/github/repo-size/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE)
