@@ -84,18 +84,12 @@ def compute_scores(predictions, ground_truths, labels):
     prec, recall, f1 = get_results(predictions, ground_truths, labels)
     
     return prec, recall, f1, predictions
-            
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Compute evaluation metrics for generated responses.")
-    parser.add_argument(
-        "--config",
-        default="config.ini",
-        help="Path to config file. Relative paths resolve from the src directory.",
-    )
-    args = parser.parse_args()
 
+
+def run_from_config(config_file_path="config.ini"):
+    """Run evaluation from a config file."""
     config = configparser.ConfigParser()
-    config_path = resolve_config_path(args.config)
+    config_path = resolve_config_path(config_file_path)
     config.read(config_path)
 
     prompt_type = config["SETTINGS"]["prompt_type"]
@@ -108,36 +102,47 @@ if __name__ == "__main__":
         prediction_path = resolve_path(config["OUTPUT"]["simple_prompt_responses_path"])
         result_path = resolve_path(config["RESULTS"]["simple_prompt_results_path"])
         error_path = resolve_path(config["RESULTS"]["simple_prompt_error_analysis_path"])
-    
+
     ground_truths_path = resolve_path(config["PATH"]["test_ground_truth_path"])
     labels_path = resolve_path(config["PATH"]["relations_path"])
 
     labels = read_json(str(labels_path))
     predictions = read_json(str(prediction_path))
     ground_truths = read_json(str(ground_truths_path)).values()
-    # print(ground_truths)
-    if config["SETTINGS"]['dataset'] =="semeval":
+    if config["SETTINGS"]['dataset'] == "semeval":
         print(labels)
         labels = labels["relation"]['names']
         ground_truths = [labels[id] for id in ground_truths]
     else:
         predictions = [tt.replace(" ","_").lower() for tt in predictions]
-
         labels = labels.keys()
 
-    # print(predictions)
     prec, recall, f1, preds = compute_scores(predictions, ground_truths, labels)
 
-    result_metrics = {"Precision":[prec],
-                      "Recall":[recall],
-                      "F1":[f1]
-                      }
-    
+    result_metrics = {
+        "Precision": [prec],
+        "Recall": [recall],
+        "F1": [f1],
+    }
+
     result_df = pd.DataFrame(result_metrics)
     result_df.to_json(str(result_path))
 
     fp, fn = error_analysis(ground_truths, preds, labels)
-    error_analysis = {"False Positives":[fp],
-                      "False Negatives":[fn]}
-    error_df = pd.DataFrame(error_analysis)
+    analysis = {
+        "False Positives": [fp],
+        "False Negatives": [fn],
+    }
+    error_df = pd.DataFrame(analysis)
     error_df.to_json(str(error_path))
+            
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Compute evaluation metrics for generated responses.")
+    parser.add_argument(
+        "--config",
+        default="config.ini",
+        help="Path to config file. Relative paths resolve from the src directory.",
+    )
+    args = parser.parse_args()
+
+    run_from_config(args.config)

@@ -84,6 +84,19 @@ def clean_sentence(sent):
 def write_embeddings(embeddings, output_file):
     np.save(output_file, embeddings)
 
+
+def run_from_config(config_file_path="config.ini"):
+    """Run embedding generation from a config file."""
+    config = configparser.ConfigParser()
+    resolved_config = resolve_config_path(config_file_path)
+    config.read(resolved_config)
+
+    input_file = resolve_path(config["EMBEDDING"]["input_embedding_path"])
+    output_file = resolve_path(config["EMBEDDING"]["output_embedding_path"])
+    data = read_json(str(input_file))
+    embeddings = compute_sentence(data)
+    write_embeddings(embeddings, str(output_file))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute sentence embeddings.")
     parser.add_argument(
@@ -93,12 +106,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    config = configparser.ConfigParser()
-    config_path = resolve_config_path(args.config)
-    config.read(config_path)
-
-    input_file = resolve_path(config["EMBEDDING"]["input_embedding_path"])
-    output_file = resolve_path(config["EMBEDDING"]["output_embedding_path"])
-    data = read_json(str(input_file))
-    embeddings = compute_sentence(data)
-    write_embeddings(embeddings, str(output_file))
+    run_from_config(args.config)

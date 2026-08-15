@@ -135,6 +135,29 @@ def main(test_file, train_file, train_emb, test_emb, output_sim_path, dataset="s
     write_json(output_sim_path, similarities)
 
 
+def run_from_config(config_file_path="config.ini"):
+    """Run similarity generation from a config file."""
+    config = configparser.ConfigParser()
+    resolved_config = resolve_config_path(config_file_path)
+    config.read(resolved_config)
+
+    test_file = resolve_path(config["SIMILARITY"]["test_file"])
+    train_file = resolve_path(config["SIMILARITY"]["train_file"])
+    train_emb = resolve_path(config["SIMILARITY"]["train_emb"])
+    test_emb = resolve_path(config["SIMILARITY"]["test_emb"])
+    output_sim_path = resolve_path(config["SIMILARITY"]["output_index"])
+    dataset = config["SETTINGS"].get("dataset", "semeval")
+
+    main(
+        str(test_file),
+        str(train_file),
+        str(train_emb),
+        str(test_emb),
+        str(output_sim_path),
+        dataset=dataset,
+    )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute train/test sentence similarity scores.")
     parser.add_argument(
@@ -144,15 +167,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    config = configparser.ConfigParser()
-    config_path = resolve_config_path(args.config)
-    config.read(config_path)
-
-    test_file = resolve_path(config["SIMILARITY"]["test_file"])
-    train_file = resolve_path(config["SIMILARITY"]["train_file"])
-    train_emb = resolve_path(config["SIMILARITY"]["train_emb"])
-    test_emb = resolve_path(config["SIMILARITY"]["test_emb"])
-    output_sim_path = resolve_path(config["SIMILARITY"]["output_index"])
-    dataset = config["SETTINGS"].get("dataset", "semeval")
-
-    main(str(test_file), str(train_file), str(train_emb), str(test_emb), str(output_sim_path), dataset=dataset)
+    run_from_config(args.config)

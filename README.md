@@ -66,7 +66,13 @@ Because TACRED is restricted, prompts/raw outputs that expose original text are 
 
 ## Setup
 
-1. Install dependencies.
+1. Install as a package (editable mode for development).
+
+```bash
+pip install -e .
+```
+
+Optional: if you prefer plain requirements installation instead of packaging:
 
 ```bash
 pip install -r requirements.txt
@@ -82,25 +88,31 @@ pip install -r requirements.txt
 1. Generate sentence embeddings.
 
 ```bash
-python src/data_augmentation/embeddings/sentence_embeddings.py --config src/config.ini
+rag4re --config src/config.ini embed
 ```
 
 2. Compute retrieval similarity index.
 
 ```bash
-python src/data_augmentation/embeddings/sentence_sim.py --config src/config.ini
+rag4re --config src/config.ini similarity
 ```
 
 3. Run generation pipeline.
 
 ```bash
-python src/main.py --config src/config.ini
+rag4re --config src/config.ini pipeline
 ```
 
 4. Run evaluation.
 
 ```bash
-python src/evaluation/results_analysis.py --config src/config.ini
+rag4re --config src/config.ini evaluate
+```
+
+5. Run the complete workflow.
+
+```bash
+rag4re --config src/config.ini all
 ```
 
 ## Environment

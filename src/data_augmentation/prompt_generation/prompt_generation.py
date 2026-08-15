@@ -12,7 +12,20 @@ PACKAGE_PARENT = '.'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1]) + "/"
-from prompt_templates import get_zero_shot_template_tacred, get_zero_shot_template_tacred_rag, semeval_prompt_template_rag, semeval_prompt_template
+try:
+    from .prompt_templates import (
+        get_zero_shot_template_tacred,
+        get_zero_shot_template_tacred_rag,
+        semeval_prompt_template_rag,
+        semeval_prompt_template,
+    )
+except ImportError:
+    from prompt_templates import (
+        get_zero_shot_template_tacred,
+        get_zero_shot_template_tacred_rag,
+        semeval_prompt_template_rag,
+        semeval_prompt_template,
+    )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
