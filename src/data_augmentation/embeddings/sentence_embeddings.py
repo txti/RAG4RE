@@ -3,6 +3,8 @@
 import os
 import sys
 import json
+import argparse
+from pathlib import Path
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import configparser
@@ -10,7 +12,27 @@ import configparser
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-2]) + "/"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+SRC_ROOT = Path(__file__).resolve().parents[2]
+
+
+def resolve_path(path_value):
+    path_obj = Path(path_value).expanduser()
+    if path_obj.is_absolute():
+        return path_obj
+    return PROJECT_ROOT / path_obj
+
+
+def resolve_config_path(config_file_path):
+    config_path = Path(config_file_path).expanduser()
+    if config_path.is_absolute():
+        return config_path
+
+    src_relative = SRC_ROOT / config_path
+    if src_relative.exists():
+        return src_relative
+
+    return PROJECT_ROOT / config_path
 
 def read_json(path):
     """ Read json file"""
@@ -63,14 +85,20 @@ def write_embeddings(embeddings, output_file):
     np.save(output_file, embeddings)
 
 if __name__ == "__main__":
-
-    print("PREFIX_PATH", PREFIX_PATH)
+    parser = argparse.ArgumentParser(description="Compute sentence embeddings.")
+    parser.add_argument(
+        "--config",
+        default="config.ini",
+        help="Path to config file. Relative paths resolve from the src directory.",
+    )
+    args = parser.parse_args()
 
     config = configparser.ConfigParser()
-    config.read(PREFIX_PATH+"config.ini")
+    config_path = resolve_config_path(args.config)
+    config.read(config_path)
 
-    input_file = config["EMBEDDING"]["input_embedding_path"]
-    output_file = config["EMBEDDING"]["output_embedding_path"]
-    data = read_json(input_file)
+    input_file = resolve_path(config["EMBEDDING"]["input_embedding_path"])
+    output_file = resolve_path(config["EMBEDDING"]["output_embedding_path"])
+    data = read_json(str(input_file))
     embeddings = compute_sentence(data)
-    write_embeddings(embeddings, output_file)
+    write_embeddings(embeddings, str(output_file))

@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 
 PACKAGE_PARENT = '.'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
@@ -10,7 +11,29 @@ from data_augmentation.prompt_generation.prompt_generation import generate_promp
 from generation_module.generation import LLM
 import configparser
 from utils import read_json, write_json
-PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1]) + "/"
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = Path(__file__).resolve().parents[1]
+
+
+def resolve_path(path_value):
+    """Resolve relative paths from the project root and keep absolute paths intact."""
+    path_obj = Path(path_value).expanduser()
+    if path_obj.is_absolute():
+        return path_obj
+    return PROJECT_ROOT / path_obj
+
+
+def resolve_config_path(config_file_path):
+    config_path = Path(config_file_path).expanduser()
+    if config_path.is_absolute():
+        return config_path
+
+    src_relative = SRC_ROOT / config_path
+    if src_relative.exists():
+        return src_relative
+
+    return PROJECT_ROOT / config_path
 
 def benchmark_data_augmentation_call(config_file_path):
     """
@@ -18,14 +41,13 @@ def benchmark_data_augmentation_call(config_file_path):
     Args:
     config_file_path: str: Path to the config file.
     """
-    print("PREFIX_PATH", PREFIX_PATH)
-
     config = configparser.ConfigParser()
-    config.read(PREFIX_PATH + config_file_path)
+    config_path = resolve_config_path(config_file_path)
+    config.read(config_path)
     
-    test_data_path = config["PATH"]["test_data_path"]
-    similar_sentences_path = config["SIMILARITY"]["output_index"]
-    relations_path = config["PATH"]["relations_path"]
+    test_data_path = resolve_path(config["PATH"]["test_data_path"])
+    similar_sentences_path = resolve_path(config["SIMILARITY"]["output_index"])
+    relations_path = resolve_path(config["PATH"]["relations_path"])
     dataset = config["SETTINGS"]["dataset"]
     prompt_type = config["SETTINGS"]["prompt_type"]
     model_name = config["SETTINGS"]["model_name"]
@@ -40,12 +62,12 @@ def benchmark_data_augmentation_call(config_file_path):
 
     if prompt_type == "rag":
         # print("RAG")
-        output_prompts_path = config["OUTPUT"]["rag_test_prompts_path"]
-        output_responses_path = config["OUTPUT"]["rag_test_responses_path"]
+        output_prompts_path = resolve_path(config["OUTPUT"]["rag_test_prompts_path"])
+        output_responses_path = resolve_path(config["OUTPUT"]["rag_test_responses_path"])
         prompts = generate_prompts(test_data, relations, similar_sentences,  dataset, prompt_type)
     else:
-        output_prompts_path = config["OUTPUT"]["simple_prompt_path"]
-        output_responses_path = config["OUTPUT"]["simple_prompt_responses_path"]
+        output_prompts_path = resolve_path(config["OUTPUT"]["simple_prompt_path"])
+        output_responses_path = resolve_path(config["OUTPUT"]["simple_prompt_responses_path"])
         prompts = generate_prompts(test_data, relations, similar_sentences,  dataset, prompt_type)
 
     llm_instance = LLM(model_name)
@@ -63,6 +85,6 @@ def benchmark_data_augmentation_call(config_file_path):
 
     responses = postprocessing(dataset, test_data, responses, relations, model_name)
     
-    write_json(output_prompts_path, prompts)
-    write_json(output_responses_path, responses)
+    write_json(str(output_prompts_path), prompts)
+    write_json(str(output_responses_path), responses)
     
