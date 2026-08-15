@@ -1,16 +1,38 @@
 import os
 import sys
 import json
+import argparse
+from pathlib import Path
 import numpy as np
 from numpy.linalg import norm
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-2]) + "/"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+SRC_ROOT = Path(__file__).resolve().parents[2]
 
 
 import configparser
+
+
+def resolve_path(path_value):
+    path_obj = Path(path_value).expanduser()
+    if path_obj.is_absolute():
+        return path_obj
+    return PROJECT_ROOT / path_obj
+
+
+def resolve_config_path(config_file_path):
+    config_path = Path(config_file_path).expanduser()
+    if config_path.is_absolute():
+        return config_path
+
+    src_relative = SRC_ROOT / config_path
+    if src_relative.exists():
+        return src_relative
+
+    return PROJECT_ROOT / config_path
 
 def read_json(path):
     """ Read json file"""
@@ -108,20 +130,29 @@ def main(test_file, train_file, train_emb, test_emb, output_sim_path, dataset="s
     if dataset == "semeval":
         similarities = semeval_compute_similarity(test_data, train_data, train_embeddings, test_embeddings)
     else:
-        similarities = compute_similarity(test_data, train_data, train_embeddings, test_embeddings, output_sim_path)
+        similarities = compute_similarity(test_data, train_data, train_embeddings, test_embeddings)
 
-    write_json(similarities, output_sim_path)
+    write_json(output_sim_path, similarities)
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Compute train/test sentence similarity scores.")
+    parser.add_argument(
+        "--config",
+        default="config.ini",
+        help="Path to config file. Relative paths resolve from the src directory.",
+    )
+    args = parser.parse_args()
 
     config = configparser.ConfigParser()
-    config.read(PREFIX_PATH+"config.ini")
+    config_path = resolve_config_path(args.config)
+    config.read(config_path)
 
-    test_file = config["SIMILARITY"]["test_file"]
-    train_file = config["SIMILARITY"]["train_file"]
-    train_emb = config["SIMILARITY"]["train_emb"]
-    test_emb = config["SIMILARITY"]["test_emb"]
-    output_sim_path = config["SIMILARITY"]["output_index"]
+    test_file = resolve_path(config["SIMILARITY"]["test_file"])
+    train_file = resolve_path(config["SIMILARITY"]["train_file"])
+    train_emb = resolve_path(config["SIMILARITY"]["train_emb"])
+    test_emb = resolve_path(config["SIMILARITY"]["test_emb"])
+    output_sim_path = resolve_path(config["SIMILARITY"]["output_index"])
+    dataset = config["SETTINGS"].get("dataset", "semeval")
 
-    main(test_file, train_file, train_emb, test_emb, output_sim_path)
+    main(str(test_file), str(train_file), str(train_emb), str(test_emb), str(output_sim_path), dataset=dataset)

@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import argparse
+from pathlib import Path
 
 import re
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -11,6 +13,15 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1]) + "/"
 from prompt_templates import get_zero_shot_template_tacred, get_zero_shot_template_tacred_rag, semeval_prompt_template_rag, semeval_prompt_template
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+
+
+def resolve_path(path_value):
+    path_obj = Path(path_value).expanduser()
+    if path_obj.is_absolute():
+        return path_obj
+    return PROJECT_ROOT / path_obj
 
 def read_json(path):
     """Read json file"""
@@ -153,10 +164,33 @@ def generate_prompts(sentences, relations, similar_sentences,  dataset="tacred",
     
     return prompts
 if  __name__ == "__main__":
-    train_data = read_json("/Users/sefika/phd_projects/revision/RAG4RE/data/semeval/original_data/train_sentences.json")
-    relation_data = read_json("/Users/sefika/phd_projects/revision/RAG4RE/data/semeval/original_data/train_relations.json")
-    relation_names = read_json("/Users/sefika/phd_projects/revision/RAG4RE/data/semeval/original_data/relations.json")['relation']['names']
+    parser = argparse.ArgumentParser(description="Generate prompts for SemEval training data.")
+    parser.add_argument(
+        "--train-sentences",
+        default="data/semeval/original_data/train_sentences.json",
+        help="Path to SemEval train sentences JSON.",
+    )
+    parser.add_argument(
+        "--train-relations",
+        default="data/semeval/original_data/train_relations.json",
+        help="Path to SemEval train relation IDs JSON.",
+    )
+    parser.add_argument(
+        "--relation-names",
+        default="data/semeval/original_data/relations.json",
+        help="Path to SemEval relation names JSON.",
+    )
+    parser.add_argument(
+        "--output",
+        default="data/semeval/original_data/train_prompts.json",
+        help="Path for generated prompts JSON.",
+    )
+    args = parser.parse_args()
+
+    train_data = read_json(str(resolve_path(args.train_sentences)))
+    relation_data = read_json(str(resolve_path(args.train_relations)))
+    relation_names = read_json(str(resolve_path(args.relation_names)))['relation']['names']
     train_relations = [relation_names[relation] for relation in relation_data]
 
     prompts = generate_prompts(train_data, train_relations, [],  dataset="semeval", prompt_type="simple")
-    write_json( "/Users/sefika/phd_projects/revision/RAG4RE/data/semeval/original_data/train_prompts.json", prompts)
+    write_json(str(resolve_path(args.output)), prompts)

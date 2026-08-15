@@ -1,5 +1,7 @@
 import os
 import sys
+import argparse
+from pathlib import Path
 from sklearn.metrics import  precision_recall_fscore_support
 import configparser
 import numpy as np
@@ -8,7 +10,27 @@ from utils import read_json, write_json
 PACKAGE_PARENT = '.'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-PREFIX_PATH = "/".join(os.path.dirname(os.path.abspath(__file__)).split("/")[:-1]) + "/"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = Path(__file__).resolve().parents[1]
+
+
+def resolve_path(path_value):
+    path_obj = Path(path_value).expanduser()
+    if path_obj.is_absolute():
+        return path_obj
+    return PROJECT_ROOT / path_obj
+
+
+def resolve_config_path(config_file_path):
+    config_path = Path(config_file_path).expanduser()
+    if config_path.is_absolute():
+        return config_path
+
+    src_relative = SRC_ROOT / config_path
+    if src_relative.exists():
+        return src_relative
+
+    return PROJECT_ROOT / config_path
 
 
 def error_analysis(ground_truths, preds, labels):
@@ -64,26 +86,35 @@ def compute_scores(predictions, ground_truths, labels):
     return prec, recall, f1, predictions
             
 if __name__ == "__main__":
-  
+    parser = argparse.ArgumentParser(description="Compute evaluation metrics for generated responses.")
+    parser.add_argument(
+        "--config",
+        default="config.ini",
+        help="Path to config file. Relative paths resolve from the src directory.",
+    )
+    args = parser.parse_args()
+
     config = configparser.ConfigParser()
-    config.read("config.ini")
+    config_path = resolve_config_path(args.config)
+    config.read(config_path)
+
     prompt_type = config["SETTINGS"]["prompt_type"]
     print(prompt_type)
     if prompt_type == "rag":
-        prediction_path = config["OUTPUT"]["rag_test_responses_path"]
-        result_path = config["RESULTS"]["rag_test_prompt_path"]
-        error_path = config["RESULTS"]["rag_test_error_analysis_path"]
+        prediction_path = resolve_path(config["OUTPUT"]["rag_test_responses_path"])
+        result_path = resolve_path(config["RESULTS"]["rag_test_prompt_path"])
+        error_path = resolve_path(config["RESULTS"]["rag_test_error_analysis_path"])
     else:
-        prediction_path = config["OUTPUT"]["simple_prompt_responses_path"]
-        result_path = config["RESULTS"]["simple_prompt_results_path"]
-        error_path = config["RESULTS"]["simple_prompt_error_analysis_path"]
+        prediction_path = resolve_path(config["OUTPUT"]["simple_prompt_responses_path"])
+        result_path = resolve_path(config["RESULTS"]["simple_prompt_results_path"])
+        error_path = resolve_path(config["RESULTS"]["simple_prompt_error_analysis_path"])
     
-    ground_truths_path = config["PATH"]["test_ground_truth_path"]
-    labels = config["PATH"]["relations_path"]
+    ground_truths_path = resolve_path(config["PATH"]["test_ground_truth_path"])
+    labels_path = resolve_path(config["PATH"]["relations_path"])
 
-    labels = read_json("/Users/sefika/phd_projects/RAG4RE-extension/data/tacred/rel2id.json")
-    predictions = read_json(prediction_path)
-    ground_truths = read_json(ground_truths_path).values()
+    labels = read_json(str(labels_path))
+    predictions = read_json(str(prediction_path))
+    ground_truths = read_json(str(ground_truths_path)).values()
     # print(ground_truths)
     if config["SETTINGS"]['dataset'] =="semeval":
         print(labels)
@@ -103,10 +134,10 @@ if __name__ == "__main__":
                       }
     
     result_df = pd.DataFrame(result_metrics)
-    result_df.to_json(result_path)
+    result_df.to_json(str(result_path))
 
     fp, fn = error_analysis(ground_truths, preds, labels)
     error_analysis = {"False Positives":[fp],
                       "False Negatives":[fn]}
     error_df = pd.DataFrame(error_analysis)
-    error_df.to_json(error_path)
+    error_df.to_json(str(error_path))
