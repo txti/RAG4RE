@@ -1,97 +1,109 @@
 # RAG4RE
-[![Python  3.10.9](https://img.shields.io/badge/python-3.10.9-blue.svg)](https://www.python.org/downloads/release/python-3109/)
-<!--Papers With Code Badges: Show leaderboard results for RAG-based relation extraction 
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/retrieval-augmented-generation-based-relation/relation-extraction-on-tacred)](https://paperswithcode.com/sota/relation-extraction-on-tacred?p=retrieval-augmented-generation-based-relation)
+[![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Transformers](https://img.shields.io/badge/Transformers-4.38.2-yellow)](https://github.com/huggingface/transformers)
+[![Sentence-Transformers](https://img.shields.io/badge/Sentence--Transformers-2.2.2-orange)](https://www.sbert.net/)
+[![GitHub stars](https://img.shields.io/github/stars/sefeoglu/RAG4RE?style=social)](https://github.com/sefeoglu/RAG4RE/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/commits/main)
+[![GitHub issues](https://img.shields.io/github/issues/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/issues)
+[![GitHub repo size](https://img.shields.io/github/repo-size/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE)
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/retrieval-augmented-generation-based-relation/relation-extraction-on-tacred-revisited)](https://paperswithcode.com/sota/relation-extraction-on-tacred-revisited?p=retrieval-augmented-generation-based-relation)
+Implementation for the paper: **Retrieval-Augmented Generation-Based Relation Extraction**.
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/retrieval-augmented-generation-based-relation/relation-extraction-on-semeval-2010-task-8-1)](https://paperswithcode.com/sota/relation-extraction-on-semeval-2010-task-8-1?p=retrieval-augmented-generation-based-relation)
+The project provides an end-to-end pipeline for relation extraction with and without retrieval augmentation across datasets such as TACRED, TACREV, Re-TACRED, and SemEval.
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/retrieval-augmented-generation-based-relation/relation-extraction-on-re-tacred)](https://paperswithcode.com/sota/relation-extraction-on-re-tacred?p=retrieval-augmented-generation-based-relation)
--->
+## Citation
 
-The repository consists of the source codes of "Retrieval-Augmented Generation-based Relation Extraction" journal paper which has been submitted to Semantic Web Journal (SWJ).
-
-
-### To cite it:
-```
+```bibtex
 @article{doi:10.1177/22104968251385519,
-         author = {Sefika Efeoglu and Adrian Paschke},
-         title ={Retrieval-Augmented Generation-Based Relation Extraction},
-         journal = {Semantic Web},
-         volume = {16},
-         number = {5},
-         pages = {22104968251385519},
-         year = {2025},
-         doi = {10.1177/22104968251385519},
-         URL = {https://doi.org/10.1177/22104968251385519},
-         eprint = {https://doi.org/10.1177/22104968251385519},
+  author = {Sefika Efeoglu and Adrian Paschke},
+  title = {Retrieval-Augmented Generation-Based Relation Extraction},
+  journal = {Semantic Web},
+  volume = {16},
+  number = {5},
+  pages = {22104968251385519},
+  year = {2025},
+  doi = {10.1177/22104968251385519},
+  url = {https://doi.org/10.1177/22104968251385519}
 }
 ```
 
+## Dataset Notes
 
-#### Please use the setting in this branch. There is no sampling on prediction of T5 results. Please use original TACRED datasets from the [LDC](https://catalog.ldc.upenn.edu/LDC2018T24)
+- TACRED is licensed by LDC and must be obtained from [LDC2018T24](https://catalog.ldc.upenn.edu/LDC2018T24).
+- TACREV is constructed from TACRED using [DFKI-NLP/tacrev](https://github.com/DFKI-NLP/tacrev).
+- Re-TACRED is derived from TACRED using [gstoica27/Re-TACRED](https://github.com/gstoica27/Re-TACRED).
+- SemEval 2010 Task 8 is available on [Hugging Face](https://huggingface.co/datasets/sem_eval_2010_task_8).
 
-#### Hardware: NVIDIA GeForce GTX 1080 Ti (4GPUs X 12GB, cpu=300 GB).
+Because TACRED is restricted, prompts/raw outputs that expose original text are not directly redistributed.
 
-Note that TACRED is licensed by the Linguistic Data Consortium (LDC), so we cannot directly publish the prompts or the raw results from the experiments conducted with Llama and Mistral, since the responses of these models consists of the prompts in their instruction parts. However, we have published the returned results when Llama and Mistral were integrated. Upon an official request, the data can be accessed on LDC, and the experiments can be easily replicated by following the instructions provided.
+## Project Structure
 
-## Project Folder Hierarchy
-
-````
+```text
 .
 ├── LICENSE
 ├── README.md
-├── data                            ---> dataset, such as tacred, tacrev, re-tacred and semeval
-├── results                         ---> results and the results of the ablation study will be saved here.
-└── src
-    ├── config.ini                  ---> configuration for dataset, approach and llm and results.
-    ├── data_preparation
-    ├── main.py                     ---> the pipeline is started with this
-    ├── retrieval                   ---> retrieval module
-    │   ├── refinement.py
-    │   └── retriever.py
-    ├── data_augmentation           ---> regenerated the user query
-    │   ├── embeddings
-    │   └── prompt_generation
-    ├── generation_module           ---> llm prompting.
-    │   └── generation.py
-    ├── ablation_study              ---> ablation study for prompt engineering approaches.
-    ├── evaluation                  ---> evaluate and visualize results. 
-    │   ├── results_analysis.py
-    │   └── vizualization.py
-    └── utils.py                    
-````
-## How to run
-Change the paths and configs under `config.ini` for your experiment.
-* 1.) Datasets
-  
-   Put the following dataset under `data` folder.
-  
-   * TACRED dataset is lincensed by Linguistic Data Consortium (LDC), so please download it from [here](https://catalog.ldc.upenn.edu/LDC2018T24)
-     
-   * TACREV dataset is constructed from TACRED via the tacrev [codes](https://github.com/DFKI-NLP/tacrev)
-     
-   * Re-TACRED dataset is derived from TACRED via this [repository](https://github.com/gstoica27/Re-TACRED)
+├── requirements.txt
+├── data/
+├── results/
+└── src/
+    ├── config.ini
+    ├── main.py
+    ├── utils.py
+    ├── data_augmentation/
+    │   ├── embeddings/
+    │   └── prompt_generation/
+    ├── data_preparation/
+    ├── evaluation/
+    │   └── results_analysis.py
+    ├── generation_module/
+    │   └── generation.py
+    └── retrieval/
+        ├── refinement.py
+        └── retriever.py
+```
 
-   * SemEval is available at the [hugging face](https://huggingface.co/datasets/sem_eval_2010_task_8) and under `data` folder.
+## Setup
 
-* 2.) First install requirements
-  
-````bash
-    pip install -r requirements.txt
-````
-* 3.) Compute embeddings and similarities for benchmark datasets in advance
-````bash
-    cd src/data_augmentation/embeddings
-    python sentence_embeddings.py
-    python sentence_sim.py
-````
-* 4.) Run Project
-  
-````bash
-$ python src/main.py
+1. Install dependencies.
 
-````
+```bash
+pip install -r requirements.txt
+```
+
+2. Review and update experiment settings in `src/config.ini`.
+
+- Paths in the config are project-relative.
+- Choose dataset, prompt type (`simple` or `rag`), and model.
+
+## Run
+
+1. Generate sentence embeddings.
+
+```bash
+python src/data_augmentation/embeddings/sentence_embeddings.py --config src/config.ini
+```
+
+2. Compute retrieval similarity index.
+
+```bash
+python src/data_augmentation/embeddings/sentence_sim.py --config src/config.ini
+```
+
+3. Run generation pipeline.
+
+```bash
+python src/main.py --config src/config.ini
+```
+
+4. Run evaluation.
+
+```bash
+python src/evaluation/results_analysis.py --config src/config.ini
+```
+
+## Environment
+
+The experiments were run on NVIDIA GeForce GTX 1080 Ti GPUs (4 x 12GB) with large CPU memory availability.
 
