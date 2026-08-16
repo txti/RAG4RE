@@ -9,11 +9,12 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/commits/main)
 [![GitHub issues](https://img.shields.io/github/issues/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/issues)
 [![GitHub repo size](https://img.shields.io/github/repo-size/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE)
-
+Implementation for the paper: 
+**Retrieval-Augmented Generation-Based Relation Extraction**
 <p align="center">
   <img src="assets/rag4re-icon.svg" alt="RAG4RE icon" width="180">
 </p>
-Implementation for the paper: **Retrieval-Augmented Generation-Based Relation Extraction**.
+
 
 
 The project provides an end-to-end pipeline for relation extraction with and without retrieval augmentation across datasets such as TACRED, TACREV, Re-TACRED, and SemEval.
