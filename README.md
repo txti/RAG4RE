@@ -1,8 +1,5 @@
 # RAG4RE
 
-<p align="center">
-  <img src="assets/rag4re-icon.svg" alt="RAG4RE icon" width="180">
-</p>
 
 [![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -13,7 +10,11 @@
 [![GitHub issues](https://img.shields.io/github/issues/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/issues)
 [![GitHub repo size](https://img.shields.io/github/repo-size/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE)
 
+<p align="center">
+  <img src="assets/rag4re-icon.svg" alt="RAG4RE icon" width="180">
+</p>
 Implementation for the paper: **Retrieval-Augmented Generation-Based Relation Extraction**.
+
 
 The project provides an end-to-end pipeline for relation extraction with and without retrieval augmentation across datasets such as TACRED, TACREV, Re-TACRED, and SemEval.
 
