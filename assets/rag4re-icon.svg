@@ -1,0 +1,45 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">RAG4RE icon</title>
+  <desc id="desc">RAG4RE icon with a document, retrieval lens, and triple-node relation symbol.</desc>
+  <defs>
+    <linearGradient id="bg" x1="26" y1="20" x2="226" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="0.55" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="74" y1="46" x2="160" y2="170" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="96" y1="92" x2="176" y2="172" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="0.5" stop-color="#FB7185"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <linearGradient id="node" x1="121" y1="121" x2="155" y2="149" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="48" fill="url(#bg)"/>
+  <circle cx="54" cy="54" r="18" fill="#22D3EE" fill-opacity="0.85"/>
+  <circle cx="210" cy="90" r="12" fill="#FDE047" fill-opacity="0.9"/>
+  <circle cx="196" cy="206" r="16" fill="#FB7185" fill-opacity="0.8"/>
+  <rect x="58" y="46" width="102" height="128" rx="20" fill="url(#panel)"/>
+  <path d="M134 46H160L186 72V98" fill="#E2E8F0"/>
+  <path d="M134 46H160L186 72V98" stroke="#CBD5E1" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M80 86H136" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M80 110H142" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M80 134H122" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="138" cy="138" r="40" fill="url(#lens)"/>
+  <circle cx="138" cy="138" r="26" fill="#FFFBEB" fill-opacity="0.96"/>
+  <path d="M166 166L194 194" stroke="#F97316" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="121" cy="149" r="8" fill="url(#node)"/>
+  <circle cx="138" cy="121" r="8" fill="url(#node)"/>
+  <circle cx="155" cy="149" r="8" fill="url(#node)"/>
+  <path d="M121 149L138 121L155 149" stroke="#0F172A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M121 149H155" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="196" cy="60" r="14" fill="#34D399" fill-opacity="0.95"/>
+  <path d="M190 60H202" stroke="#065F46" stroke-width="4" stroke-linecap="round"/>
+  <path d="M196 54V66" stroke="#065F46" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,5 +1,9 @@
 # RAG4RE
 
+<p align="center">
+  <img src="assets/rag4re-icon.svg" alt="RAG4RE icon" width="180">
+</p>
+
 [![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Transformers](https://img.shields.io/badge/Transformers-4.38.2-yellow)](https://github.com/huggingface/transformers)
