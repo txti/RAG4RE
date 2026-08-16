@@ -9,6 +9,8 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/commits/main)
 [![GitHub issues](https://img.shields.io/github/issues/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE/issues)
 [![GitHub repo size](https://img.shields.io/github/repo-size/sefeoglu/RAG4RE)](https://github.com/sefeoglu/RAG4RE)
+
+
 Implementation for the paper: 
 **Retrieval-Augmented Generation-Based Relation Extraction**
 <p align="center">
